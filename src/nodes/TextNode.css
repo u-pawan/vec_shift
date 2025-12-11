@@ -1,0 +1,125 @@
+/* TextNode.css
+ * Specific styles for the Text node with auto-resize and variable highlighting
+ */
+
+.text-node {
+    min-width: 250px;
+}
+
+.text-node-content {
+    position: relative;
+}
+
+/* Variable labels on left side */
+.variable-labels {
+    position: absolute;
+    left: -8px;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    pointer-events: none;
+}
+
+.variable-label {
+    position: absolute;
+    left: -60px;
+    transform: translateY(-50%);
+    font-size: 10px;
+    color: var(--text-secondary);
+    background: var(--input-bg);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+    border: 1px solid var(--input-border);
+}
+
+/* Textarea wrapper for overlay technique */
+.textarea-wrapper {
+    position: relative;
+    min-height: 60px;
+}
+
+/* Highlight overlay - sits behind textarea */
+.highlight-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 8px 10px;
+    background: var(--input-bg);
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-family: inherit;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow: hidden;
+    pointer-events: none;
+    color: transparent;
+}
+
+/* Valid variable highlighting - green tint */
+.highlight-overlay .var-valid {
+    background: rgba(34, 197, 94, 0.2);
+    color: #22c55e;
+    border-radius: 3px;
+}
+
+/* Invalid variable highlighting - red */
+.highlight-overlay .var-invalid {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border-radius: 3px;
+    text-decoration: wavy underline #ef4444;
+}
+
+/* Auto-resize textarea */
+.auto-resize-textarea {
+    position: relative;
+    width: 100%;
+    min-width: 180px;
+    min-height: 60px;
+    max-width: 400px;
+    padding: 8px 10px;
+    background: transparent;
+    border: 1px solid var(--input-border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 13px;
+    font-family: inherit;
+    line-height: 1.5;
+    resize: none;
+    overflow: hidden;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-sizing: border-box;
+    z-index: 1;
+}
+
+.auto-resize-textarea:focus {
+    outline: none;
+    border-color: var(--input-focus);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.auto-resize-textarea::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.6;
+}
+
+/* Variable warning messages */
+.variable-warnings {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 8px;
+}
+
+.warning-text {
+    font-size: 11px;
+    color: #ef4444;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}

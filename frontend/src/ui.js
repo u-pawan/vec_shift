@@ -7,6 +7,7 @@ import { useState, useRef, useCallback, useMemo } from 'react';
 import ReactFlow, {
   Controls,
   Background,
+  MiniMap,
   ReactFlowProvider,
   addEdge,
   applyNodeChanges,
@@ -47,6 +48,7 @@ const nodeTypes = {
 const Flow = ({ nodes, edges, setNodes, setEdges, nodeIDsRef }) => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
+  const [eraserMode, setEraserMode] = useState(false);
 
   const getNodeID = useCallback((type) => {
     if (nodeIDsRef.current[type] === undefined) {
@@ -78,6 +80,28 @@ const Flow = ({ nodes, edges, setNodes, setEdges, nodeIDsRef }) => {
       markerEnd: { type: MarkerType.Arrow, height: '20px', width: '20px' }
     }, eds)),
     [setEdges]
+  );
+
+  // Delete node on click when eraser mode is active
+  const onNodeClick = useCallback(
+    (event, node) => {
+      if (eraserMode) {
+        setNodes((nds) => nds.filter((n) => n.id !== node.id));
+        // Also remove edges connected to this node
+        setEdges((eds) => eds.filter((e) => e.source !== node.id && e.target !== node.id));
+      }
+    },
+    [eraserMode, setNodes, setEdges]
+  );
+
+  // Delete edge on click when eraser mode is active
+  const onEdgeClick = useCallback(
+    (event, edge) => {
+      if (eraserMode) {
+        setEdges((eds) => eds.filter((e) => e.id !== edge.id));
+      }
+    },
+    [eraserMode, setEdges]
   );
 
   const onDrop = useCallback(
@@ -126,6 +150,8 @@ const Flow = ({ nodes, edges, setNodes, setEdges, nodeIDsRef }) => {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        onNodeClick={onNodeClick}
+        onEdgeClick={onEdgeClick}
         onDrop={onDrop}
         onDragOver={onDragOver}
         onInit={setReactFlowInstance}
@@ -135,7 +161,27 @@ const Flow = ({ nodes, edges, setNodes, setEdges, nodeIDsRef }) => {
         connectionLineType='smoothstep'
       >
         <Background color="#334155" gap={gridSize} />
+
+        {/* Eraser button above controls */}
+        <div className="eraser-control">
+          <button
+            className={`eraser-button ${eraserMode ? 'active' : ''}`}
+            onClick={() => setEraserMode(!eraserMode)}
+            title={eraserMode ? 'Exit Eraser Mode' : 'Enter Eraser Mode'}
+          >
+            🗑️
+          </button>
+        </div>
+
         <Controls className="flow-controls" />
+
+        {/* MiniMap at bottom right */}
+        <MiniMap
+          className="flow-minimap"
+          nodeColor="#6366f1"
+          maskColor="rgba(15, 23, 42, 0.8)"
+          position="bottom-right"
+        />
       </ReactFlow>
     </div>
   );

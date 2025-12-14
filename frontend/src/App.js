@@ -1,6 +1,4 @@
-// App.js
-// Main application component - Pipeline Builder
-// Combines toolbar, canvas, and submit button
+// The main component that brings everything together: Toolbar, Canvas, and Submit.
 
 import { PipelineToolbar } from './toolbar';
 import { PipelineUI } from './ui';

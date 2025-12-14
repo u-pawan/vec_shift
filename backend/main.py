@@ -1,6 +1,5 @@
-# main.py
-# FastAPI backend for VectorShift Pipeline Builder
-# Provides endpoint to parse pipeline and detect DAG structure
+# This is the main backend file for the VectorShift Pipeline Builder.
+# It provides endpoints for parsing pipelines and checking their DAG status.
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,7 +12,7 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Enable CORS for frontend communication
+# We need to enable CORS so that our frontend can talk to this backend.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
@@ -23,9 +22,9 @@ app.add_middleware(
 )
 
 
-# Pydantic models for request/response validation
+# These Pydantic models ensure that the data we receive and send is valid.
 class Node(BaseModel):
-    """Represents a node in the pipeline graph"""
+    """A single node within our pipeline graph."""
     id: str
     type: Optional[str] = None
     position: Optional[Dict[str, float]] = None
@@ -33,7 +32,7 @@ class Node(BaseModel):
 
 
 class Edge(BaseModel):
-    """Represents an edge (connection) between nodes"""
+    """A connection (edge) between two nodes."""
     id: Optional[str] = None
     source: str
     target: str
@@ -42,13 +41,13 @@ class Edge(BaseModel):
 
 
 class PipelineRequest(BaseModel):
-    """Request body for pipeline parsing"""
+    """The expected structure of the request body for parsing."""
     nodes: List[Node]
     edges: List[Edge]
 
 
 class PipelineResponse(BaseModel):
-    """Response body with pipeline analysis"""
+    """The result of our pipeline analysis."""
     num_nodes: int
     num_edges: int
     is_dag: bool
@@ -56,35 +55,35 @@ class PipelineResponse(BaseModel):
 
 def is_dag(nodes: List[Node], edges: List[Edge]) -> bool:
     """
-    Determines if the directed graph defined by edges is acyclic (DAG).
+    Checks if the graph is a Directed Acyclic Graph (DAG) using Depth-First Search.
     
-    Uses Depth-First Search (DFS) with three-color marking:
-    - WHITE (0): Node not yet visited
-    - GRAY (1): Node is being processed (in current DFS path)
-    - BLACK (2): Node processing complete
+    We use three colors to mark nodes:
+    - WHITE (0): Not yet visited.
+    - GRAY (1): Currently being visited (in the current path).
+    - BLACK (2): Completely finished.
     
-    A back edge (edge to a GRAY node) indicates a cycle.
+    If we see a GRAY node while traversing, it means we found a cycle!
     
     Args:
-        nodes: List of nodes in the graph
-        edges: List of directed edges (source -> target)
+        nodes: All the nodes in our graph.
+        edges: All the connections between them.
     
     Returns:
-        True if the graph is a DAG (no cycles), False otherwise
+        True if it's a valid DAG, False if there's a cycle.
     """
     if not nodes:
-        return True  # Empty graph is a DAG
+        return True  # An empty graph is technically a DAG, so we return True.
     
-    # Build adjacency list from edges
+    # First, we build an adjacency list to represent the graph structure.
     node_ids = {node.id for node in nodes}
     adj: Dict[str, List[str]] = {node_id: [] for node_id in node_ids}
     
     for edge in edges:
-        # Only add edge if both source and target exist in nodes
+        # We only include edges where both the start and end nodes actually exist.
         if edge.source in adj:
             adj[edge.source].append(edge.target)
     
-    # Color states for DFS
+    # We use colors to track the state of each node during DFS.
     WHITE, GRAY, BLACK = 0, 1, 2
     color: Dict[str, int] = {node_id: WHITE for node_id in node_ids}
     
@@ -92,25 +91,25 @@ def is_dag(nodes: List[Node], edges: List[Edge]) -> bool:
         """
         DFS traversal that returns False if a cycle is detected.
         """
-        color[node] = GRAY  # Mark as being processed
+        color[node] = GRAY  # Mark this node as currently being visited.
         
         for neighbor in adj.get(node, []):
-            # Skip edges to nodes not in our node set
+            # Skip edges that point to nodes we don't know about.
             if neighbor not in color:
                 continue
                 
             if color[neighbor] == GRAY:
-                # Back edge found - cycle detected!
+                # If we see a node that is currently being visited, we found a cycle!
                 return False
             
             if color[neighbor] == WHITE:
                 if not dfs(neighbor):
                     return False
         
-        color[node] = BLACK  # Mark as fully processed
+        color[node] = BLACK  # We are done with this node, so mark it as finished.
         return True
     
-    # Check all nodes (handles disconnected components)
+    # We iterate through all nodes to handle cases where the graph is disconnected.
     for node_id in node_ids:
         if color[node_id] == WHITE:
             if not dfs(node_id):
@@ -121,7 +120,7 @@ def is_dag(nodes: List[Node], edges: List[Edge]) -> bool:
 
 @app.get('/')
 def read_root():
-    """Health check endpoint"""
+    """A simple health check endpoint."""
     return {'status': 'ok', 'message': 'VectorShift Pipeline API is running'}
 
 
@@ -131,13 +130,13 @@ def parse_pipeline(pipeline: PipelineRequest):
     Parses a pipeline and returns analysis results.
     
     Accepts:
-        - nodes: List of node objects with id, type, position, data
-        - edges: List of edge objects with source and target node ids
+        - nodes: List of nodes with their details.
+        - edges: List of connections between nodes.
     
     Returns:
-        - num_nodes: Count of nodes in the pipeline
-        - num_edges: Count of edges (connections) in the pipeline
-        - is_dag: Whether the pipeline forms a Directed Acyclic Graph
+        - num_nodes: How many nodes we found.
+        - num_edges: How many connections we found.
+        - is_dag: True if the pipeline is a valid DAG.
     """
     num_nodes = len(pipeline.nodes)
     num_edges = len(pipeline.edges)

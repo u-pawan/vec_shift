@@ -1,6 +1,5 @@
-// store.js
-// Zustand store for React Flow state management
-// Uses proper integration with React Flow to avoid infinite re-renders
+// This store manages the state of our React Flow diagram.
+// It is set up to work smoothly with React Flow and prevent unnecessary re-renders.
 
 import { create } from "zustand";
 import {
@@ -10,7 +9,7 @@ import {
   MarkerType,
 } from 'reactflow';
 
-// Initialize nodeIDs object
+// We start with an empty object to track node IDs.
 const initialNodeIDs = {};
 
 export const useStore = create((set, get) => ({
@@ -18,13 +17,13 @@ export const useStore = create((set, get) => ({
   edges: [],
   nodeIDs: initialNodeIDs,
 
-  // Get a unique node ID for a given type
+  // Helper to generate a unique ID for a new node.
   getNodeID: (type) => {
     const currentIDs = get().nodeIDs;
     const currentCount = currentIDs[type] || 0;
     const newCount = currentCount + 1;
 
-    // Update nodeIDs without triggering unnecessary re-renders
+    // We update the ID counter quietly to keep things efficient.
     set((state) => ({
       nodeIDs: {
         ...state.nodeIDs,
@@ -35,28 +34,28 @@ export const useStore = create((set, get) => ({
     return `${type}-${newCount}`;
   },
 
-  // Add a new node to the canvas
+  // Adds a new node to our list.
   addNode: (node) => {
     set((state) => ({
       nodes: [...state.nodes, node]
     }));
   },
 
-  // Handle node changes from React Flow
+  // Updates the nodes when React Flow detects a change.
   onNodesChange: (changes) => {
     set((state) => ({
       nodes: applyNodeChanges(changes, state.nodes),
     }));
   },
 
-  // Handle edge changes from React Flow  
+  // Updates the edges when React Flow detects a change.
   onEdgesChange: (changes) => {
     set((state) => ({
       edges: applyEdgeChanges(changes, state.edges),
     }));
   },
 
-  // Handle new connections between nodes
+  // Called when the user connects two nodes.
   onConnect: (connection) => {
     set((state) => ({
       edges: addEdge({
@@ -68,7 +67,7 @@ export const useStore = create((set, get) => ({
     }));
   },
 
-  // Update a specific field in a node's data
+  // Updates a single piece of data within a node.
   updateNodeField: (nodeId, fieldName, fieldValue) => {
     set((state) => ({
       nodes: state.nodes.map((node) => {

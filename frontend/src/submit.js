@@ -1,11 +1,10 @@
-// submit.js
-// Submit button component that sends pipeline data to backend
-// Collects nodes and edges from React Flow and POSTs to /pipelines/parse
+// The SubmitButton component handles sending the pipeline data to our backend.
+// It grabs the current state of the graph and sends it off for analysis.
 
 import { useState } from 'react';
 import { getNodesAndEdges } from './ui';
 
-// Backend API URL - can be configured via environment variable
+// This is where we will send our requests.
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
 export const SubmitButton = () => {
@@ -14,10 +13,10 @@ export const SubmitButton = () => {
     const [error, setError] = useState(null);
 
     /**
-     * Handles the submit action:
-     * 1. Collects current nodes and edges from the pipeline
-     * 2. POSTs to backend /pipelines/parse endpoint
-     * 3. Displays result in a modal
+     * When the user clicks submit, we:
+     * 1. Grab the nodes and edges from the canvas.
+     * 2. Package them up and send them to the backend to check if it's a valid DAG.
+     * 3. Show the results in a nice modal.
      */
     const handleSubmit = async () => {
         setIsLoading(true);
@@ -25,10 +24,10 @@ export const SubmitButton = () => {
         setResult(null);
 
         try {
-            // Get nodes and edges from the UI
+            // Grab the current nodes and connections from the UI helper.
             const { nodes, edges } = getNodesAndEdges();
 
-            // Prepare the payload with nodes and edges
+            // Structure the data exactly how the backend expects it.
             const payload = {
                 nodes: nodes,
                 edges: edges
@@ -36,7 +35,7 @@ export const SubmitButton = () => {
 
             console.log('Submitting pipeline:', payload);
 
-            // POST to backend
+            // Send the POST request.
             const response = await fetch(`${API_URL}/pipelines/parse`, {
                 method: 'POST',
                 headers: {
@@ -52,7 +51,7 @@ export const SubmitButton = () => {
             const data = await response.json();
             console.log('Backend response:', data);
 
-            // Set result to show in modal
+            // Store the result so we can display it to the user.
             setResult(data);
 
         } catch (err) {

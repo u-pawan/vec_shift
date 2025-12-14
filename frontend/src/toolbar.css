@@ -1,11 +1,16 @@
 /* toolbar.css
  * Styles for the pipeline toolbar with node palette
+ * Includes responsive design with hamburger menu for mobile
  */
 
 .pipeline-toolbar {
     background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
     padding: 20px;
     border-bottom: 1px solid #334155;
+}
+
+.toolbar-content {
+    display: block;
 }
 
 .toolbar-header {
@@ -50,4 +55,153 @@
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+}
+
+/* Mobile menu toggle - hidden on desktop */
+/* Mobile menu toggle - hidden on desktop */
+.mobile-menu-toggle {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--color-bg-secondary, #1e293b);
+    border: 1px solid var(--color-border, #334155);
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.mobile-menu-toggle:hover {
+    background: var(--color-bg-tertiary, #334155);
+    border-color: var(--color-accent, #6366f1);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md, 0 4px 12px rgba(0, 0, 0, 0.3));
+}
+
+.mobile-menu-toggle:active {
+    transform: translateY(0);
+}
+
+.menu-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    flex: 1;
+}
+
+.menu-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-text-primary, #f8fafc);
+    letter-spacing: -0.3px;
+}
+
+.menu-subtitle {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--color-text-secondary, #94a3b8);
+    margin-top: 2px;
+}
+
+/* Hamburger icon animation */
+.hamburger-icon {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 20px;
+    height: 14px;
+    position: relative;
+}
+
+.hamburger-icon span {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background-color: var(--color-text-primary, #f8fafc);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+.hamburger-icon.open span:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+}
+
+.hamburger-icon.open span:nth-child(2) {
+    opacity: 0;
+    transform: translateX(-10px);
+}
+
+.hamburger-icon.open span:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+    .pipeline-toolbar {
+        padding: 12px 16px;
+    }
+
+    .mobile-menu-toggle {
+        display: flex;
+    }
+
+    .toolbar-content {
+        display: none;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #334155;
+        animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .pipeline-toolbar.expanded .toolbar-content {
+        display: block;
+    }
+
+    .toolbar-header {
+        display: none;
+        /* Hide since hamburger button already shows title/subtitle */
+    }
+
+    .toolbar-title {
+        font-size: 18px;
+    }
+
+    .toolbar-subtitle {
+        font-size: 12px;
+    }
+
+    .node-groups {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .node-group {
+        gap: 6px;
+    }
+
+    .node-list {
+        gap: 6px;
+    }
+}
+
+/* Tablet styles */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .node-groups {
+        gap: 16px;
+    }
 }

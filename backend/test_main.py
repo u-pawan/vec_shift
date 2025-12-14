@@ -1,6 +1,5 @@
-# test_main.py
-# Unit tests for the VectorShift Pipeline API
-# Run with: python -m pytest test_main.py -v
+# This file contains unit tests for our VectorShift Pipeline API.
+# You can run them using: python -m pytest test_main.py -v
 
 import pytest
 from fastapi.testclient import TestClient
@@ -10,7 +9,7 @@ client = TestClient(app)
 
 
 class TestHealthCheck:
-    """Tests for the health check endpoint"""
+    """Tests ensuring the health check endpoint works."""
     
     def test_root_endpoint(self):
         response = client.get("/")
@@ -20,10 +19,10 @@ class TestHealthCheck:
 
 
 class TestPipelineParse:
-    """Tests for the /pipelines/parse endpoint"""
+    """Tests for the main /pipelines/parse endpoint."""
     
     def test_empty_pipeline(self):
-        """Empty pipeline should return zeros and is_dag=True"""
+        """Test that an empty pipeline is considered a valid DAG."""
         response = client.post(
             "/pipelines/parse",
             json={"nodes": [], "edges": []}
@@ -35,7 +34,7 @@ class TestPipelineParse:
         assert data["is_dag"] is True
     
     def test_single_node(self):
-        """Single node with no edges"""
+        """Test a single isolated node."""
         response = client.post(
             "/pipelines/parse",
             json={
@@ -50,7 +49,7 @@ class TestPipelineParse:
         assert data["is_dag"] is True
     
     def test_linear_pipeline(self):
-        """Linear pipeline: A -> B -> C"""
+        """Test a simple linear pipeline (A -> B -> C)."""
         response = client.post(
             "/pipelines/parse",
             json={
@@ -68,7 +67,7 @@ class TestPipelineParse:
         assert data["is_dag"] is True
     
     def test_simple_cycle(self):
-        """Simple cycle: A -> B -> A (should not be DAG)"""
+        """Test that a simple cycle (A -> B -> A) is caught."""
         response = client.post(
             "/pipelines/parse",
             json={
@@ -86,7 +85,7 @@ class TestPipelineParse:
         assert data["is_dag"] is False
     
     def test_self_loop(self):
-        """Self loop: A -> A (should not be DAG)"""
+        """Test that a node connecting to itself is invalid."""
         response = client.post(
             "/pipelines/parse",
             json={
@@ -99,8 +98,8 @@ class TestPipelineParse:
         assert data["is_dag"] is False
     
     def test_complex_dag(self):
-        """Complex DAG with multiple paths"""
-        # Diamond pattern: A -> B, A -> C, B -> D, C -> D
+        """Test a complex valid valid DAG (Diamond pattern)."""
+        # Structure: A splits to B and C, which both merge into D.
         response = client.post(
             "/pipelines/parse",
             json={
@@ -120,7 +119,7 @@ class TestPipelineParse:
         assert data["is_dag"] is True
     
     def test_complex_cycle(self):
-        """Complex cycle: A -> B -> C -> A"""
+        """Test a larger cycle: A -> B -> C -> A."""
         response = client.post(
             "/pipelines/parse",
             json={
@@ -137,7 +136,7 @@ class TestPipelineParse:
         assert data["is_dag"] is False
     
     def test_disconnected_components(self):
-        """Disconnected components (both DAGs)"""
+        """Test separate clusters of nodes that aren't connected to each other."""
         response = client.post(
             "/pipelines/parse",
             json={
@@ -156,7 +155,7 @@ class TestPipelineParse:
 
 
 class TestDAGFunction:
-    """Direct tests for the is_dag function"""
+    """Direct unit tests for the is_dag logic."""
     
     def test_empty_graph(self):
         assert is_dag([], []) is True

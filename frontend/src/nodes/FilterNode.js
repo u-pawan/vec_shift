@@ -1,5 +1,4 @@
-// FilterNode.js
-// Filters data based on a condition - demonstrates conditional logic node
+// Filters incoming data based on specific conditions.
 
 import { useState } from 'react';
 import { Position } from 'reactflow';
@@ -9,7 +8,7 @@ export const FilterNode = ({ id, data }) => {
     const [condition, setCondition] = useState(data?.condition || 'contains');
     const [value, setValue] = useState(data?.value || '');
 
-    // Two outputs: one for matching data, one for non-matching
+    // We have two outputs: one for data that passes the filter, and one for data that fails.
     const handles = [
         { type: 'target', position: Position.Left, id: `${id}-input` },
         {

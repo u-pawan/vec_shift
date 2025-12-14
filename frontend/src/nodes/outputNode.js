@@ -1,6 +1,5 @@
-// outputNode.js
-// Output node for emitting data from the pipeline
-// Refactored to use BaseNode abstraction
+// This node sends data out of the pipeline.
+// It serves as a final destination for data.
 
 import { useState } from 'react';
 import { Position } from 'reactflow';
@@ -18,7 +17,7 @@ export const OutputNode = ({ id, data }) => {
     setOutputType(e.target.value);
   };
 
-  // Define handles for this node type - input on left
+  // We set up a single input handle on the left.
   const handles = [
     { type: 'target', position: Position.Left, id: `${id}-value` }
   ];

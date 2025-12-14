@@ -1,5 +1,4 @@
-// PromptNode.js
-// Template node for prompt engineering - demonstrates multi-line template editing
+// This node helps users create prompts with dynamic variables.
 
 import { useState, useRef, useEffect } from 'react';
 import { Position } from 'reactflow';
@@ -12,7 +11,7 @@ export const PromptNode = ({ id, data }) => {
     const [tone, setTone] = useState(data?.tone || 'professional');
     const textareaRef = useRef(null);
 
-    // Auto-resize textarea
+    // Automatically adjust the height of the text area as the user types.
     useEffect(() => {
         if (textareaRef.current) {
             textareaRef.current.style.height = 'auto';

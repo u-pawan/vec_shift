@@ -1,21 +1,17 @@
-// textNode.js
-// Text node with auto-resizing textarea and dynamic variable handles
-// Part 3 implementation: detects {{ variableName }} patterns and creates handles
+// A smart text node that detects {{variables}} and creates input handles for them.
+// It parses the text as you type and updates connections automatically.
 
 import { useState, useRef, useLayoutEffect, useMemo, memo } from 'react';
 import { Handle, Position } from 'reactflow';
 import './TextNode.css';
 
-/**
- * Regex to validate JavaScript identifiers
- * Must start with letter, underscore, or $ followed by alphanumeric, underscore, or $
- */
+// We use this regex to make sure variable names are valid JavaScript identifiers.
+// Must start with letter/$/_ and contain only alphanumerics/$/_.
 const VALID_IDENTIFIER_REGEX = /^[A-Za-z_$][A-Za-z0-9_$]*$/;
 
 /**
- * Extracts all variable references from text and validates them
- * @param {string} text - The input text to parse
- * @returns {Array<{name: string, isValid: boolean}>} Array of variable info objects
+ * Scans the provided text for {{variable}} patterns.
+ * Returns a list of all variables found, referencing whether they are valid or not.
  */
 const extractVariables = (text) => {
   const variables = [];
@@ -41,17 +37,17 @@ const extractVariables = (text) => {
   return variables;
 };
 
-// Memoized component to prevent unnecessary re-renders
+// We wrap this in memo to keep performance snappy, avoiding re-renders unless necessary.
 export const TextNode = memo(({ id, data }) => {
   const [currText, setCurrText] = useState(data?.text || '{{input}}');
   const textareaRef = useRef(null);
 
-  // Extract variables using useMemo
+  // We calculate variables only when the text actually changes.
   const variables = useMemo(() => extractVariables(currText), [currText]);
   const validVariables = useMemo(() => variables.filter(v => v.isValid), [variables]);
   const invalidVariables = useMemo(() => variables.filter(v => !v.isValid), [variables]);
 
-  // Auto-resize textarea when text changes using useLayoutEffect
+  // Logic to make the textarea grow or shrink as the user types.
   useLayoutEffect(() => {
     const textarea = textareaRef.current;
     if (textarea) {

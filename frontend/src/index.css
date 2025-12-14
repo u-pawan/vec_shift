@@ -1,12 +1,11 @@
-/* index.css
- * Global styles and CSS variables for the VectorShift Pipeline Builder
- * Provides consistent theming across all components
+/* Global Application Styles and Theme Variables.
+ * This file handles the consistent look and feel across the app.
  */
 
-/* Import Inter font for modern typography */
+/* We use the Inter font for a modern look. */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-/* CSS Variables for theming */
+/* Centralized theme variables. */
 :root {
   /* Colors */
   --color-bg-primary: #0f172a;
@@ -46,7 +45,7 @@
   --transition-slow: 0.3s ease;
 }
 
-/* Reset and base styles */
+/* Basic standard CSS reset. */
 * {
   box-sizing: border-box;
 }
@@ -66,7 +65,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-/* App layout */
+/* Main container layout. */
 .app-container {
   display: flex;
   flex-direction: column;
@@ -74,14 +73,14 @@ code {
   overflow: hidden;
 }
 
-/* Pipeline canvas area */
+/* Styles for the main graph area. */
 .pipeline-canvas {
   flex: 1;
   width: 100%;
   background: var(--color-bg-primary);
 }
 
-/* Draggable node in toolbar */
+/* Styles for the draggable items in the sidebar. */
 .draggable-node {
   display: flex;
   align-items: center;
@@ -118,7 +117,7 @@ code {
   color: var(--color-text-primary);
 }
 
-/* Submit section */
+/* The bottom bar with the submit button. */
 .submit-section {
   display: flex;
   align-items: center;
@@ -162,7 +161,7 @@ code {
   transform: none;
 }
 
-/* React Flow customization */
+/* Overrides for React Flow default styles. */
 .react-flow__node {
   border-radius: var(--radius-lg) !important;
 }
@@ -177,7 +176,7 @@ code {
   stroke-dasharray: 5 5;
 }
 
-/* Controls and MiniMap styling */
+/* Custom styling for the map and zoom controls. */
 .flow-controls {
   background: var(--color-bg-secondary) !important;
   border: 1px solid var(--color-border) !important;
@@ -201,10 +200,10 @@ code {
   border-radius: var(--radius-md) !important;
 }
 
-/* Eraser control button - positioned above zoom controls */
+/* The eraser button in the top-left corner. */
 .eraser-control {
   position: absolute;
-  bottom: 140px;
+  top: 10px;
   left: 10px;
   z-index: 5;
 }
@@ -234,7 +233,7 @@ code {
   box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
 }
 
-/* Modal styles */
+/* Styles for the result popup. */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -351,7 +350,7 @@ code {
   background: var(--color-accent-hover);
 }
 
-/* Scrollbar styling */
+/* Custom scrollbar to match the dark theme. */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;

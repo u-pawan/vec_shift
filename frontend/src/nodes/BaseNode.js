@@ -1,29 +1,27 @@
-// BaseNode.js
-// Reusable node abstraction component that captures shared logic and rendering
-// between all node types. Provides consistent layout, styling, and handle rendering.
+// A reusable component that handles the common look and feel for all our nodes.
+// It ensures everything looks consistent and handles connection points properly.
 
 import { Handle } from 'reactflow';
 import './BaseNode.css';
 
 /**
- * BaseNode - A reusable wrapper component for all pipeline nodes
+ * BaseNode: The wrapper that every node uses.
  * 
- * @param {Object} props
- * @param {string} props.id - Unique node identifier
- * @param {string} props.title - Header title text
- * @param {string|React.ReactNode} [props.icon] - Optional icon (emoji or component)
- * @param {React.ReactNode} props.children - Body content of the node
- * @param {Array} [props.handles] - Array of handle definitions
- *   Each handle: { type: 'source'|'target', position, id, style?, label? }
- * @param {Object} [props.style] - Custom container styles
- * @param {string} [props.className] - Additional CSS class names
+ * Props:
+ * @param {string} id - The unique ID of the node.
+ * @param {string} title - The text to show in the header.
+ * @param {string|React.ReactNode} [icon] - An optional emoji or icon component.
+ * @param {React.ReactNode} children - The actual controls (inputs, selects, etc.) inside the node.
+ * @param {Array} [handles] - A list of connection points (sources/targets) to render.
+ * @param {Object} [style] - Custom styles if needed.
+ * @param {string} [className] - Extra CSS classes.
  */
-export const BaseNode = ({ 
-  id, 
-  title, 
-  icon, 
-  children, 
-  handles = [], 
+export const BaseNode = ({
+  id,
+  title,
+  icon,
+  children,
+  handles = [],
   style = {},
   className = ''
 }) => {
@@ -34,12 +32,12 @@ export const BaseNode = ({
         {icon && <span className="node-icon">{icon}</span>}
         <span className="node-title">{title}</span>
       </div>
-      
+
       {/* Node Body Content */}
       <div className="node-body">
         {children}
       </div>
-      
+
       {/* Render all handles */}
       {handles.map((handle, index) => (
         <Handle

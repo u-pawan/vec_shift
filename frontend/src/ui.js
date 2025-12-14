@@ -1,9 +1,7 @@
-// ui.js
-// Displays the drag-and-drop pipeline UI with React Flow
-// Uses React useState directly to avoid Zustand compatibility issues
-// --------------------------------------------------
+// This component renders the main flow canvas using React Flow.
+// It handles all the drag-and-drop logic and node rendering.
 
-import { useState, useRef, useCallback, useMemo } from 'react';
+import { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import ReactFlow, {
   Controls,
   Background,
@@ -15,7 +13,7 @@ import ReactFlow, {
   MarkerType
 } from 'reactflow';
 
-// Import all node types
+// Import all our custom node types.
 import { InputNode } from './nodes/inputNode';
 import { LLMNode } from './nodes/llmNode';
 import { OutputNode } from './nodes/outputNode';
@@ -31,7 +29,7 @@ import 'reactflow/dist/style.css';
 const gridSize = 20;
 const proOptions = { hideAttribution: true };
 
-// Register all available node types - must be outside component to avoid recreation
+// We register the node types here. (Must be outside the component to prevent re-creation issues).
 const nodeTypes = {
   customInput: InputNode,
   llm: LLMNode,
@@ -44,7 +42,7 @@ const nodeTypes = {
   join: JoinNode,
 };
 
-// Inner component that contains the flow logic
+// The internal flow component where the magic happens.
 const Flow = ({ nodes, edges, setNodes, setEdges, nodeIDsRef }) => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
@@ -82,19 +80,19 @@ const Flow = ({ nodes, edges, setNodes, setEdges, nodeIDsRef }) => {
     [setEdges]
   );
 
-  // Delete node on click when eraser mode is active
+  // Removes a node if the user clicks it while in "Eraser Mode".
   const onNodeClick = useCallback(
     (event, node) => {
       if (eraserMode) {
         setNodes((nds) => nds.filter((n) => n.id !== node.id));
-        // Also remove edges connected to this node
+        // Clean up any connections to this node too.
         setEdges((eds) => eds.filter((e) => e.source !== node.id && e.target !== node.id));
       }
     },
     [eraserMode, setNodes, setEdges]
   );
 
-  // Delete edge on click when eraser mode is active
+  // Removes a connection if the user clicks it while in "Eraser Mode".
   const onEdgeClick = useCallback(
     (event, edge) => {
       if (eraserMode) {
@@ -113,7 +111,7 @@ const Flow = ({ nodes, edges, setNodes, setEdges, nodeIDsRef }) => {
         const appData = JSON.parse(event.dataTransfer.getData('application/reactflow'));
         const type = appData?.nodeType;
 
-        // check if the dropped element is valid
+        // Make sure the dropped item is actually a node.
         if (typeof type === 'undefined' || !type) {
           return;
         }
@@ -136,6 +134,39 @@ const Flow = ({ nodes, edges, setNodes, setEdges, nodeIDsRef }) => {
     },
     [reactFlowInstance, getNodeID, getInitNodeData, setNodes]
   );
+
+  // Listen for drop events from mobile devices.
+  useEffect(() => {
+    const handleMobileDrop = (event) => {
+      const { nodeType, x, y } = event.detail;
+
+      if (!reactFlowWrapper.current || !reactFlowInstance) return;
+
+      const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
+
+      // Figure out where precisely on the canvas they dropped it.
+      const position = reactFlowInstance.project({
+        x: x - reactFlowBounds.left,
+        y: y - reactFlowBounds.top,
+      });
+
+      const nodeID = getNodeID(nodeType);
+      const newNode = {
+        id: nodeID,
+        type: nodeType,
+        position,
+        data: getInitNodeData(nodeID, nodeType),
+      };
+
+      setNodes((nds) => [...nds, newNode]);
+    };
+
+    window.addEventListener('node-dropped', handleMobileDrop);
+
+    return () => {
+      window.removeEventListener('node-dropped', handleMobileDrop);
+    };
+  }, [reactFlowInstance, getNodeID, getInitNodeData, setNodes]);
 
   const onDragOver = useCallback((event) => {
     event.preventDefault();
@@ -162,7 +193,7 @@ const Flow = ({ nodes, edges, setNodes, setEdges, nodeIDsRef }) => {
       >
         <Background color="#334155" gap={gridSize} />
 
-        {/* Eraser button above controls */}
+        {/* The Eraser Tool button */}
         <div className="eraser-control">
           <button
             className={`eraser-button ${eraserMode ? 'active' : ''}`}
@@ -175,7 +206,7 @@ const Flow = ({ nodes, edges, setNodes, setEdges, nodeIDsRef }) => {
 
         <Controls className="flow-controls" />
 
-        {/* MiniMap at bottom right */}
+        {/* The MiniMap in the corner */}
         <MiniMap
           className="flow-minimap"
           nodeColor="#6366f1"
@@ -187,7 +218,7 @@ const Flow = ({ nodes, edges, setNodes, setEdges, nodeIDsRef }) => {
   );
 };
 
-// Export nodes and edges via a custom hook so submit.js can access them
+// Expose the current nodes and edges so the submit button can grab them.
 let globalNodes = [];
 let globalEdges = [];
 
@@ -196,13 +227,13 @@ export const getNodesAndEdges = () => ({
   edges: globalEdges
 });
 
-// Main component wrapper with ReactFlowProvider
+// The main wrapper that provides the React Flow context.
 export const PipelineUI = () => {
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
   const nodeIDsRef = useRef({});
 
-  // Keep global references updated for submit button
+  // Keep our global variables in sync.
   globalNodes = nodes;
   globalEdges = edges;
 

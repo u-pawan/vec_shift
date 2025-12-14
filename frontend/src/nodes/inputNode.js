@@ -1,6 +1,5 @@
-// inputNode.js
-// Input node for receiving data into the pipeline
-// Refactored to use BaseNode abstraction
+// This node lets the user input data into the pipeline.
+// It uses our handy BaseNode wrapper.
 
 import { useState } from 'react';
 import { Position } from 'reactflow';
@@ -18,7 +17,7 @@ export const InputNode = ({ id, data }) => {
     setInputType(e.target.value);
   };
 
-  // Define handles for this node type
+  // We set up the connection points (handles) for this node.
   const handles = [
     { type: 'source', position: Position.Right, id: `${id}-value` }
   ];

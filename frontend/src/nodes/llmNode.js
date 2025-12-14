@@ -1,11 +1,8 @@
-// This node represents a Large Language Model for AI processing.
-// It allows users to connect prompts to an AI model.
 
 import { Position } from 'reactflow';
 import { BaseNode } from './BaseNode';
 
 export const LLMNode = ({ id, data }) => {
-  // We set up inputs for system and user prompts, and an output for the AI's response.
   const handles = [
     {
       type: 'target',

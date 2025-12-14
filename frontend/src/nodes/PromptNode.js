@@ -1,4 +1,3 @@
-// This node helps users create prompts with dynamic variables.
 
 import { useState, useRef, useEffect } from 'react';
 import { Position } from 'reactflow';
@@ -11,7 +10,6 @@ export const PromptNode = ({ id, data }) => {
     const [tone, setTone] = useState(data?.tone || 'professional');
     const textareaRef = useRef(null);
 
-    // Automatically adjust the height of the text area as the user types.
     useEffect(() => {
         if (textareaRef.current) {
             textareaRef.current.style.height = 'auto';

@@ -1,10 +1,7 @@
-// The SubmitButton component handles sending the pipeline data to our backend.
-// It grabs the current state of the graph and sends it off for analysis.
 
 import { useState } from 'react';
 import { getNodesAndEdges } from './ui';
 
-// This is where we will send our requests.
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
 export const SubmitButton = () => {
@@ -12,22 +9,14 @@ export const SubmitButton = () => {
     const [result, setResult] = useState(null);
     const [error, setError] = useState(null);
 
-    /**
-     * When the user clicks submit, we:
-     * 1. Grab the nodes and edges from the canvas.
-     * 2. Package them up and send them to the backend to check if it's a valid DAG.
-     * 3. Show the results in a nice modal.
-     */
     const handleSubmit = async () => {
         setIsLoading(true);
         setError(null);
         setResult(null);
 
         try {
-            // Grab the current nodes and connections from the UI helper.
             const { nodes, edges } = getNodesAndEdges();
 
-            // Structure the data exactly how the backend expects it.
             const payload = {
                 nodes: nodes,
                 edges: edges
@@ -35,7 +24,6 @@ export const SubmitButton = () => {
 
             console.log('Submitting pipeline:', payload);
 
-            // Send the POST request.
             const response = await fetch(`${API_URL}/pipelines/parse`, {
                 method: 'POST',
                 headers: {
@@ -51,7 +39,6 @@ export const SubmitButton = () => {
             const data = await response.json();
             console.log('Backend response:', data);
 
-            // Store the result so we can display it to the user.
             setResult(data);
 
         } catch (err) {
@@ -84,7 +71,6 @@ export const SubmitButton = () => {
                 </button>
             </div>
 
-            {/* Result Modal */}
             {(result || error) && (
                 <div className="modal-overlay" onClick={closeModal}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>

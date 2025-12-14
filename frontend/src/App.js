@@ -1,4 +1,3 @@
-// The main component that brings everything together: Toolbar, Canvas, and Submit.
 
 import { PipelineToolbar } from './toolbar';
 import { PipelineUI } from './ui';

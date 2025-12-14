@@ -1,13 +1,6 @@
-/* Global Application Styles and Theme Variables.
- * This file handles the consistent look and feel across the app.
- */
-
-/* We use the Inter font for a modern look. */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-/* Centralized theme variables. */
 :root {
-  /* Colors */
   --color-bg-primary: #0f172a;
   --color-bg-secondary: #1e293b;
   --color-bg-tertiary: #334155;
@@ -21,31 +14,26 @@
   --color-text-muted: #64748b;
   --color-border: #334155;
 
-  /* Spacing */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 16px;
   --spacing-lg: 24px;
   --spacing-xl: 32px;
 
-  /* Border radius */
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-xl: 16px;
 
-  /* Shadows */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
 
-  /* Transitions */
   --transition-fast: 0.15s ease;
   --transition-normal: 0.2s ease;
   --transition-slow: 0.3s ease;
 }
 
-/* Basic standard CSS reset. */
 * {
   box-sizing: border-box;
 }
@@ -65,7 +53,6 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-/* Main container layout. */
 .app-container {
   display: flex;
   flex-direction: column;
@@ -73,14 +60,12 @@ code {
   overflow: hidden;
 }
 
-/* Styles for the main graph area. */
 .pipeline-canvas {
   flex: 1;
   width: 100%;
   background: var(--color-bg-primary);
 }
 
-/* Styles for the draggable items in the sidebar. */
 .draggable-node {
   display: flex;
   align-items: center;
@@ -117,7 +102,6 @@ code {
   color: var(--color-text-primary);
 }
 
-/* The bottom bar with the submit button. */
 .submit-section {
   display: flex;
   align-items: center;
@@ -161,7 +145,6 @@ code {
   transform: none;
 }
 
-/* Overrides for React Flow default styles. */
 .react-flow__node {
   border-radius: var(--radius-lg) !important;
 }
@@ -176,7 +159,6 @@ code {
   stroke-dasharray: 5 5;
 }
 
-/* Custom styling for the map and zoom controls. */
 .flow-controls {
   background: var(--color-bg-secondary) !important;
   border: 1px solid var(--color-border) !important;
@@ -200,7 +182,6 @@ code {
   border-radius: var(--radius-md) !important;
 }
 
-/* The eraser button in the top-left corner. */
 .eraser-control {
   position: absolute;
   top: 10px;
@@ -233,7 +214,6 @@ code {
   box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
 }
 
-/* Styles for the result popup. */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -350,7 +330,6 @@ code {
   background: var(--color-accent-hover);
 }
 
-/* Custom scrollbar to match the dark theme. */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;

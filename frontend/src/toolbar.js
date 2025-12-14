@@ -1,5 +1,3 @@
-// The PipelineToolbar is where users pick nodes to add to their graph.
-// It organizes nodes into nice categories.
 
 import { useState } from 'react';
 import { DraggableNode } from './draggableNode';
@@ -14,7 +12,6 @@ export const PipelineToolbar = () => {
 
     return (
         <div className={`pipeline-toolbar ${isExpanded ? 'expanded' : ''}`}>
-            {/* Button to toggle menu on mobile screens */}
             <button
                 className="mobile-menu-toggle"
                 onClick={toggleMenu}
@@ -38,7 +35,6 @@ export const PipelineToolbar = () => {
                 </div>
 
                 <div className="node-groups">
-                    {/* Nodes for getting data in and out */}
                     <div className="node-group">
                         <span className="group-label">Data</span>
                         <div className="node-list">
@@ -48,7 +44,6 @@ export const PipelineToolbar = () => {
                         </div>
                     </div>
 
-                    {/* Nodes that do the heavy lifting */}
                     <div className="node-group">
                         <span className="group-label">Processing</span>
                         <div className="node-list">
@@ -58,7 +53,6 @@ export const PipelineToolbar = () => {
                         </div>
                     </div>
 
-                    {/* Helpful utility nodes */}
                     <div className="node-group">
                         <span className="group-label">Utilities</span>
                         <div className="node-list">

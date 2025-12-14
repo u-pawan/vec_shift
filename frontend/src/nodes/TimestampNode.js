@@ -1,5 +1,3 @@
-// TimestampNode.js
-// Outputs the current timestamp - demonstrates a simple output-only node
 
 import { useState, useEffect } from 'react';
 import { Position } from 'reactflow';
@@ -9,7 +7,6 @@ export const TimestampNode = ({ id, data }) => {
     const [format, setFormat] = useState(data?.format || 'ISO');
     const [currentTime, setCurrentTime] = useState(new Date().toISOString());
 
-    // Update timestamp every second
     useEffect(() => {
         const interval = setInterval(() => {
             const now = new Date();

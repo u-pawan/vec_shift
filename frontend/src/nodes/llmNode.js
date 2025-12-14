@@ -1,12 +1,8 @@
-// llmNode.js
-// LLM (Large Language Model) node for AI processing
-// Refactored to use BaseNode abstraction
 
 import { Position } from 'reactflow';
 import { BaseNode } from './BaseNode';
 
 export const LLMNode = ({ id, data }) => {
-  // Define handles: two inputs on left (system, prompt), one output on right (response)
   const handles = [
     {
       type: 'target',

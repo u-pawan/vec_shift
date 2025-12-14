@@ -1,5 +1,3 @@
-// PromptNode.js
-// Template node for prompt engineering - demonstrates multi-line template editing
 
 import { useState, useRef, useEffect } from 'react';
 import { Position } from 'reactflow';
@@ -12,7 +10,6 @@ export const PromptNode = ({ id, data }) => {
     const [tone, setTone] = useState(data?.tone || 'professional');
     const textareaRef = useRef(null);
 
-    // Auto-resize textarea
     useEffect(() => {
         if (textareaRef.current) {
             textareaRef.current.style.height = 'auto';

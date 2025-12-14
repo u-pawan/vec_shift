@@ -1,5 +1,3 @@
-// JoinNode.js
-// Combines multiple inputs into one output - demonstrates multi-input node
 
 import { useState } from 'react';
 import { Position } from 'reactflow';
@@ -9,7 +7,6 @@ export const JoinNode = ({ id, data }) => {
     const [separator, setSeparator] = useState(data?.separator || 'newline');
     const [inputCount, setInputCount] = useState(data?.inputCount || 3);
 
-    // Generate input handles based on count
     const handles = [];
 
     for (let i = 0; i < inputCount; i++) {
@@ -22,14 +19,12 @@ export const JoinNode = ({ id, data }) => {
         });
     }
 
-    // Single output handle
     handles.push({
         type: 'source',
         position: Position.Right,
         id: `${id}-output`
     });
 
-    // Get display text for separator
     const getSeparatorDisplay = () => {
         switch (separator) {
             case 'newline': return '\\n (newline)';

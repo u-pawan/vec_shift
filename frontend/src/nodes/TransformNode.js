@@ -1,5 +1,3 @@
-// TransformNode.js
-// Transforms input data with various operations - demonstrates input/output node with selector
 
 import { useState } from 'react';
 import { Position } from 'reactflow';
@@ -13,7 +11,6 @@ export const TransformNode = ({ id, data }) => {
         { type: 'source', position: Position.Right, id: `${id}-output` }
     ];
 
-    // Get description for the selected transform
     const getDescription = () => {
         switch (transform) {
             case 'uppercase':
